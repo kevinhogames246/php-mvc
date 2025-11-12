@@ -1,0 +1,10 @@
+{
+    "name": "site/balancalles",
+    "description": "Controle de balanca",
+    
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
