@@ -1,0 +1,40 @@
+/* Estilização Geral */
+h3#titulo {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.btn_padrao {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    /* padding: 10px 20px; */
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+.btn_padrao:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo da Div Voltar */
+.div_voltar {
+    display: block;
+    margin: 0 0 0 20px;
+    /* text-align: center; */
+}
+
+.div_voltar .case-button button{
+    width: 100px;
+}
+
+.div_voltar .btn_padrao {
+    background-color: #ff6f61;
+}
+
+.div_voltar .btn_padrao:hover {
+    background-color: #e55d4f;
+}

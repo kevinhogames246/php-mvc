@@ -1,0 +1,54 @@
+/* Estilização do diálogo (Caixa de comfirmação) */
+
+@import "botao.css";
+
+.dialogo{
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0f172ab3;
+    backdrop-filter: blur(4px);
+    position: fixed;
+    z-index: 1;
+}
+
+#div_dialogo{
+    width: fit-content;
+    height: fit-content;
+    max-width: 90%;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: white;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 999;
+}
+
+#div_dialogo p{
+    color: var(--primary-color);
+    font-size: 20px;
+    text-align: center;
+}
+
+#div_dialogo button{
+    margin: 10px;
+}
+
+#div_dialogo .div_botoes{
+    display: flex;
+    justify-content: center;
+}
+
+
+@media screen and (max-width: 365px) {
+    #div_dialogo .div_botoes{
+     flex-direction: column-reverse;
+     align-items: center;
+    }
+}
+

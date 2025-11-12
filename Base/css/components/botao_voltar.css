@@ -1,0 +1,26 @@
+/* Estilização do botão de voltar à página */
+
+#seta_voltar{
+	width: 40px;
+	height: 40px;
+    margin: 30px 0 0 30px;
+	position: absolute;
+    border: solid 3px var(--primary-color);
+    border-radius: 10px;
+    display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#seta_voltar i{
+	font-size: 28px;
+	margin-top: 8%;
+	color: var(--primary-color);
+}
+
+@media screen and (max-width: 768px) {
+	#seta_voltar {
+		position: relative;
+		margin-bottom: -10px;
+	}
+  }

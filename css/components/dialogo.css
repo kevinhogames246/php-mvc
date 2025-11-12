@@ -1,0 +1,49 @@
+.dialogo[open] {
+    display: flex; /* Ocultar por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semitransparente */
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#div_dialogo {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px; /* Ajuste conforme necessário */
+}
+
+#div_dialogo p {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #333;
+}
+
+.div_botoes {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    /* min-height: 30dvh; */
+    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    /* display: flex;
+    justify-content: space-between; */
+}
+
+.div_botoes button {
+    width: 45%;
+}
+
+.btn_padrao.cancelar {
+    background-color: #dc3545; /* Cor para cancelar */
+}
+
+.btn_padrao.cancelar:hover {
+    background-color: #c82333;
+}

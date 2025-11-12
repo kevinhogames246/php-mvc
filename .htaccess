@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# Detecta se há tentativas de acessar diretórios anteriores com "../"
+RewriteCond %{THE_REQUEST} \.\./ [NC]
+
+# Redireciona para um arquivo específico, como error.php
+# RewriteRule ^([^.?]+)$ %{REQUEST_URI}.php [L]
+
+RewriteRule .* /index.php [L,R=302]
+
+
+RewriteCond %{REQUEST_FILENAME}.php -f
+
+RewriteRule !.*\.php$ %{REQUEST_FILENAME}.php [QSA,L]

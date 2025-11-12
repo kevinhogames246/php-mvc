@@ -1,0 +1,8 @@
+/* Estilização do título da página */
+
+#titulo{
+	color: var(--primary-color);
+	text-align: center;
+	font-weight: 600;
+	margin-top: 45px;
+}

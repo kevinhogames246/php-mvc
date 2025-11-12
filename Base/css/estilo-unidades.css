@@ -1,0 +1,39 @@
+/* Arquivo CSS para estilização da página de uniidades */
+
+/* Divisão que mostra esta unidade */
+#div_unidade{
+    min-width: 60%;
+    height: min-content;
+    margin: 40px auto 0 auto;
+    padding: 30px;
+    background-color: var(--second-color);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+/* -----------------------------------------------------------*/
+
+/* Texto da divisão que mostra esta unidade */
+#div_unidade p{
+    color: white;
+    font-size: 18px;
+}
+
+#div_unidade h3{
+    color: white;
+    padding-bottom: 10px;
+}
+/* -----------------------------------------------------------*/
+
+
+@media screen and (max-width: 768px) {
+    #div_unidade {
+        flex-direction: column;
+        align-items: center;
+        max-width: 90%;
+    }
+    #div_unidade button {
+        margin: 35px 0 10px 0;
+    }
+}

@@ -1,0 +1,46 @@
+/* Arquivo CSS para estilização da página de detalhes do procedimento */
+
+/* Título da página */
+#titulo {
+    margin: 0;
+}
+/* -----------------------------------------------------------*/
+
+/* Divisão que tem todo o conteúdo */
+#container{
+    margin: 100px 0 100px 0;
+}
+/* -----------------------------------------------------------*/
+
+/* Dados de detalhes do procedimento */
+#texto_detalhes{
+	margin-bottom: -1rem;
+	font-size: large;
+}
+/* -----------------------------------------------------------*/
+
+/* Div com os detalhes do processo */
+#div_detalhes_proc{
+	padding: 40px 65px 40px 65px;
+    background-color: var(--second-color);
+    color: white;
+    text-align: justify;
+    border-radius: 30px 30px 30px 30px;
+    margin: 30px auto 0 auto;
+    font-size: medium;
+	width: fit-content;
+	max-width: 60%;
+    min-width: 40%;
+    box-shadow: 0px 0px 10.75px 3.75px var(--primary-color);
+}
+/* -----------------------------------------------------------*/
+
+
+@media screen and (max-width: 768px) {
+   #div_detalhes_proc{
+    max-width: 90%;
+   }
+   #container{
+    margin: 15% 0 15% 0;
+   }
+}

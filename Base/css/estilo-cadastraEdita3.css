@@ -1,0 +1,66 @@
+/* Arquivo CSS para estilização da página de cadastrar e editar procedimentos */
+
+/* Divisão para selecionar ícone */
+#div_icone{
+    display: flex;
+    align-items: center;
+}
+/* -----------------------------------------------------------*/
+
+/* Circulo com o ícone escolhido */
+.circulo{
+    margin: 31px 15px 0px 5px;
+}
+/* -----------------------------------------------------------*/
+
+/* Separação do formulário em colunas */
+#colunas{
+    display: flex;
+    align-items: center;
+}
+/* -----------------------------------------------------------*/
+
+#coluna1{
+    margin-right: 40px;
+}
+/* -----------------------------------------------------------*/
+
+/* Campos de texto com botão de selecionar */
+#campos_selecionar{
+    margin-top: 15px;
+}
+
+#campos_selecionar button{
+    margin: 0 0 0 10px;
+}
+/* -----------------------------------------------------------*/
+
+
+@media screen and (max-width: 768px) {
+    #colunas, #div_icone {
+        flex-direction: column;
+    }
+    #coluna1{
+    margin: 0;
+    }
+    .label-float{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #campos_selecionar button{
+        margin: 20px 0 10px 0;
+    }
+    .circulo{
+        margin: 31px 0 -20px 0;
+    }
+    #campos_selecionar{
+        margin: 24px 0 -10px 0;
+    }
+}
+
+@media screen and (max-width: 310px) {
+	.forms input, .forms textarea, .select {
+		width: 90vw;
+	}
+}

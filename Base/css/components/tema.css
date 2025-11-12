@@ -1,0 +1,42 @@
+/* Estilização do botão do tema (modo dark) */
+
+.theme-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 25%;
+    bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.theme-container:hover {
+    opacity: 0.8;
+}
+
+.shadow-dark {
+    background-color: black;
+    box-shadow: 0 0 3.75px 2.75px var(--primary-color);
+}
+
+.shadow-light {
+    box-shadow: 0 0 3.75px 2.75px var(--primary-color);
+}
+
+@keyframes change {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.4);
+    }
+}
+
+.change {
+    animation-name: change;
+    animation-duration: 1s;
+    animation-direction: alternate;
+}

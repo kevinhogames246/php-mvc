@@ -1,0 +1,68 @@
+/* Arquivo CSS para estilização da página de erro */
+
+/* Divisão com tudo menos a logo Health Track */
+#container{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    margin: 0 5% 0 5%;
+}
+/* -----------------------------------------------------------*/
+
+/* Imagem de erro */
+#logo_erro{
+    width: 35vw;
+    margin-right: 50px;
+}
+/* -----------------------------------------------------------*/
+
+/* Botão para voltar ao início */
+.btn_padrao{
+    background-color: var(--third-color);
+    font-weight: bold;
+}
+/* -----------------------------------------------------------*/
+
+/* Texto de erro */
+h1{
+    font-family: Helvetica;
+    font-size: 40px;
+    color: var(--primary-color);
+}
+
+p{
+    font-family: Helvetica;
+    font-size: 25px;
+    color: var(--primary-color);
+}
+/* -----------------------------------------------------------*/
+
+/* Logo do Health Track */
+#logo_ht{
+    width: 22vw;
+    margin: 0 auto 0 auto;
+    position: absolute;
+    bottom: 25px;
+    left: 0;
+    right: 0;
+}
+/* -----------------------------------------------------------*/
+
+
+@media screen and (max-width: 768px) {
+    #container {
+        flex-direction: column;
+    }
+    #logo_erro{
+        width: 80vw;
+        margin: 30px 10px 0;
+    }
+    #logo_ht{
+        width: 60vw;
+    }
+    #container div{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}

@@ -1,0 +1,23 @@
+/* Arquivo CSS para estilização da página de esqueceu a senha */
+
+/* Texto da página */
+#p_aviso{
+    color: var(--primary-color);
+    text-align: center;
+    margin: 20px 0 -5px 0;
+    font-size: 17px;
+}
+/* -----------------------------------------------------------*/
+
+/* Formulário da página */
+#container{
+    margin: auto;
+}
+/* -----------------------------------------------------------*/
+
+
+@media screen and (max-width: 768px) {
+    #p_aviso {
+        margin: 20px 5px -5px 5px;
+    }
+}
