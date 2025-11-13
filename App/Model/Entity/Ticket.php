@@ -21,17 +21,19 @@ class Ticket{
             'dtHoraFim' => $this->dtHoraFim
         ]);
 
-        
-        $obDataBase = new Database('ticket');
-        
+        return true;
+    }
+    public function alterar(){
+        $this->dtHoraIni = date('Y-m-d H:i:s');
+        $this->id = (new Database('ticket'))->insert([
+            'veiculo'   => $this->veiculo,
+            'dtHoraIni' => $this->dtHoraIni,
+            'dtHoraFim' => $this->dtHoraFim
+        ]);
 
-        echo '<pre>';
-        print_r($this);
-        echo '</pre>';exit;
     }
 
-    public static function getTickets($where = null, $order = null, $limit = null){
-        return (New Database('ticket'))->select($where, $order, $limit)
-                                       ->fetchAll(PDO::FETCH_CLASS, SELF::class);
+    public static function getTickets($where = null, $order = null, $limit = null, $fields = '*'){
+        return (New Database('ticket'))->select($where, $order, $limit, $fields);
     }
 }

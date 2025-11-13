@@ -10,22 +10,29 @@ $obRouter->get('/', [
 ]);
 
 $obRouter->get('/tickets', [
-    function(){
-        return new Response(202, Pages\Tickets::Tickets());
+    function($request){
+        return new Response(202, Pages\Tickets::Tickets($request));
     }
 ]);
 
-$obRouter->get('/ticket/{idTicket}', [
+$obRouter->get('/ticket/details/{idTicket}', [
     function($idTicket){
         // return new Response(202, Pages\Page::getPage('Ticket '. $idTicket . ' - ' . $acao));
         return new Response(202, Pages\Tickets::TicketFormular($idTicket));
     }
 ]);
 
-$obRouter->get('/ticket/cadastrar', [
-    function($request){
+$obRouter->post('/ticket/details/{idTicket}', [
+    function($idTicket, $request){
         // return new Response(202, Pages\Page::getPage('Ticket '. $idTicket . ' - ' . $acao));
-        return new Response(202, Pages\Tickets::TicketFormular(['idTicket' => '']));
+        return new Response(202, Pages\Tickets::TicketFormular($idTicket, $request));
+    }
+]);
+
+$obRouter->get('/ticket/cadastrar', [
+    function(): Response{
+        // return new Response(202, Pages\Page::getPage('Ticket '. $idTicket . ' - ' . $acao));
+        return new Response(202, Pages\Tickets::TicketFormular());
     }
 ]);
 

@@ -48,6 +48,7 @@ class Database{
         try {
         $statement = $this->connection->prepare($query);
         $statement->execute($params);
+
         return $statement;
         } catch(PDOException $e) {
             // header('Location: views/erro');
@@ -61,9 +62,7 @@ class Database{
         $binds  = array_pad([], count($fields), '?');
         $query = 'INSERT INTO ' . $this->table . '('. implode(', ', $fields) .') VALUES (' . implode(', ', $binds) . ')';
 
-        echo '<pre>';
-        print_r($query);
-        echo '</pre>';exit;
+
         $this->execute($query, array_values($values));
 
         return $this->connection->lastInsertId(); 
@@ -78,5 +77,23 @@ class Database{
         $query = 'SELECT ' . $fields . ' FROM ' . $this->table . ' ' . $where . ' ' . $order . ' ' . $limit;
 
         return $this->execute($query);
+    }
+
+    public function update($where, $values){
+        $fields = array_keys($values);
+
+        $query = 'UPDATE ' . $this->table . ' SET ' . implode(' = ?', $fields) .  ' = ? WHERE ' . $where;
+        
+        $this->execute($query, array_values($values));
+
+        return true;
+    }
+    public function delete($where){
+
+        $query = 'DELETE FREM ' . $this->table . ' WHERE ' . $where;
+        
+        $this->execute($query);
+
+        return true;
     }
 }

@@ -20,6 +20,7 @@ class View{
         
         $contentView = self::getContentView($view);
 
+        
         $vars = array_merge(self::$vars, $vars);
 
         $keys = array_keys($vars);

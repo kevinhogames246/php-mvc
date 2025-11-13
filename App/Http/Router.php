@@ -14,7 +14,7 @@ class Router{
     private $request;
 
     public function __construct($url){
-        $this->request = new Request();
+        $this->request = new Request($this);
         $this->url = $url;
         $this->setPrefix();
     }
@@ -100,9 +100,6 @@ class Router{
         try {
             $route = $this->getRoute();
 
-            // echo '<pre>';
-            // print_r($route);
-            // echo '</pre>';exit;
 
             if(!isset($route['controller'])){
                 throw new Exception("a URL não pode ser processada", 500);
