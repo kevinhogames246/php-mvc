@@ -3,7 +3,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use \App\Utils\View;
-USE \WilliamCosta\DotEnv\Environment;
+USE \App\DotEnv\Environment;
 USE \App\Db\Database;
 
 

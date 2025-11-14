@@ -1,99 +1,182 @@
-<?php 
+<?php
 
 namespace App\Db;
 
-use PDO;
-use PDOException;
+use \PDO;
+use \PDOException;
 
 class Database{
-    private static $db_host = '';
-    private static $db_name = '';
-    private static $db_user = '';
-    private static $db_pass = '';
 
-    private $table;
+  /**
+   * Host de conexão com o banco de dados
+   * @var string
+   */
+  private static $host;
 
-    private $connection;
+  /**
+   * Nome do banco de dados
+   * @var string
+   */
+  private static $name;
 
-    public function __construct($table = null){
-        $this->table = $table;
-        $this->setConnection();
+  /**
+   * Usuário do banco
+   * @var string
+   */
+  private static $user;
+
+  /**
+   * Senha de acesso ao banco de dados
+   * @var string
+   */
+  private static $pass;
+
+  /**
+   * Porta de acesso ao banco
+   * @var integer
+   */
+  private static $port;
+
+  /**
+   * Nome da tabela a ser manipulada
+   * @var string
+   */
+  private $table;
+
+  /**
+   * Instancia de conexão com o banco de dados
+   * @var PDO
+   */
+  private $connection;
+
+  /**
+   * Método responsável por configurar a classe
+   * @param  string  $host
+   * @param  string  $name
+   * @param  string  $user
+   * @param  string  $pass
+   * @param  integer $port
+   */
+  public static function config($host,$name,$user,$pass,$port = 3306){
+    self::$host = $host;
+    self::$name = $name;
+    self::$user = $user;
+    self::$pass = $pass;
+    self::$port = $port;
+  }
+
+  /**
+   * Define a tabela e instancia e conexão
+   * @param string $table
+   */
+  public function __construct($table = null){
+    $this->table = $table;
+    $this->setConnection();
+  }
+
+  /**
+   * Método responsável por criar uma conexão com o banco de dados
+   */
+  private function setConnection(){
+    try{
+      $this->connection = new PDO('mysql:host='.self::$host.';dbname='.self::$name.';port='.self::$port,self::$user,self::$pass);
+      $this->connection->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+    }catch(PDOException $e){
+      die('ERROR: '.$e->getMessage());
     }
+  }
 
-    public static function config($db_host, $db_name, $db_user, $db_pass){
-        SELF::$db_host = $db_host;
-        SELF::$db_name = $db_name;
-        SELF::$db_user = $db_user;
-        SELF::$db_pass = $db_pass;
+  /**
+   * Método responsável por executar queries dentro do banco de dados
+   * @param  string $query
+   * @param  array  $params
+   * @return PDOStatement
+   */
+  public function execute($query,$params = []){
+    try{
+      $statement = $this->connection->prepare($query);
+      $statement->execute($params);
+      return $statement;
+    }catch(PDOException $e){
+      die('ERROR: '.$e->getMessage());
     }
+  }
 
-    private function setConnection(){
-        try {
-            $this->connection = new PDO(
-                'mysql:host=' . SELF::$db_host . 
-                ';dbname=' . SELF::$db_name . 
-                ';charset=utf8',
-                SELF::$db_user, 
-                SELF::$db_pass);
-            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch(PDOException $e) {
-            // header('Location: views/erro');
-            echo "Erro na conexão com o banco de dados: " . $e->getMessage();
-            die();
-        }
-    }
+  /**
+   * Método responsável por inserir dados no banco
+   * @param  array $values [ field => value ]
+   * @return integer ID inserido
+   */
+  public function insert($values){
+    //DADOS DA QUERY
+    $fields = array_keys($values);
+    $binds  = array_pad([],count($fields),'?');
 
-    public function execute($query, $params = []){
+    //MONTA A QUERY
+    $query = 'INSERT INTO '.$this->table.' ('.implode(',',$fields).') VALUES ('.implode(',',$binds).')';
 
-        try {
-        $statement = $this->connection->prepare($query);
-        $statement->execute($params);
+    //EXECUTA O INSERT
+    $this->execute($query,array_values($values));
 
-        return $statement;
-        } catch(PDOException $e) {
-            // header('Location: views/erro');
-            echo "Erro na conexão com o banco de dados: " . $e->getMessage();
-            die();
-        }
-    }
-    public function insert($values){
-        
-        $fields = array_keys($values);
-        $binds  = array_pad([], count($fields), '?');
-        $query = 'INSERT INTO ' . $this->table . '('. implode(', ', $fields) .') VALUES (' . implode(', ', $binds) . ')';
+    //RETORNA O ID INSERIDO
+    return $this->connection->lastInsertId();
+  }
 
+  /**
+   * Método responsável por executar uma consulta no banco
+   * @param  string $where
+   * @param  string $order
+   * @param  string $limit
+   * @param  string $fields
+   * @return PDOStatement
+   */
+  public function select($where = null, $order = null, $limit = null, $fields = '*'){
+    //DADOS DA QUERY
+    $where = strlen($where) ? 'WHERE '.$where : '';
+    $order = strlen($order) ? 'ORDER BY '.$order : '';
+    $limit = strlen($limit) ? 'LIMIT '.$limit : '';
 
-        $this->execute($query, array_values($values));
+    //MONTA A QUERY
+    $query = 'SELECT '.$fields.' FROM '.$this->table.' '.$where.' '.$order.' '.$limit;
 
-        return $this->connection->lastInsertId(); 
-    }
+    //EXECUTA A QUERY
+    return $this->execute($query);
+  }
 
-    public function select($where = null, $order = null, $limit = null, $fields = '*'){
-        $where = strlen($where) ? 'WHERE ' . $where : '';
-        $order = strlen($order) ? 'ORDER BY ' . $order : '';
-        $limit = strlen($limit) ? 'LIMIT ' . $limit : '';
+  /**
+   * Método responsável por executar atualizações no banco de dados
+   * @param  string $where
+   * @param  array $values [ field => value ]
+   * @return boolean
+   */
+  public function update($where,$values){
+    //DADOS DA QUERY
+    $fields = array_keys($values);
 
+    //MONTA A QUERY
+    $query = 'UPDATE '.$this->table.' SET '.implode('=?,',$fields).'=? WHERE '.$where;
 
-        $query = 'SELECT ' . $fields . ' FROM ' . $this->table . ' ' . $where . ' ' . $order . ' ' . $limit;
+    //EXECUTAR A QUERY
+    $this->execute($query,array_values($values));
 
-        return $this->execute($query);
-    }
+    //RETORNA SUCESSO
+    return true;
+  }
 
-    public function update($where, $values){
-        $fields = array_keys($values);
+  /**
+   * Método responsável por excluir dados do banco
+   * @param  string $where
+   * @return boolean
+   */
+  public function delete($where){
+    //MONTA A QUERY
+    $query = 'DELETE FROM '.$this->table.' WHERE '.$where;
 
-        $query = 'UPDATE ' . $this->table . ' SET ' . implode(' = ?', $fields) .  ' = ? WHERE ' . $where;
-        
-        $this->execute($query, array_values($values));
+    //EXECUTA A QUERY
+    $this->execute($query);
 
-        return true;
-    }
-    public function delete($where){
+    //RETORNA SUCESSO
+    return true;
+  }
 
-        $query = 'DELETE FREM ' . $this->table . ' WHERE ' . $where;
-        
-        $this->execute($query);
-
-        return true;
-    }
 }

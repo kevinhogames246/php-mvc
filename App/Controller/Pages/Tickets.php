@@ -4,11 +4,13 @@ namespace App\Controller\Pages;
 
 use \App\Utils\View;
 use \App\Model\Entity\Ticket;
+use \App\Db\Pagination;
 
 class Tickets extends Page{
 
     public static function TicketsDetails($request){
         
+        $quantidadeTotal = Ticket::getTickets(null, null, null, 'COUNT(*) as qtd')->fetchObject()->qtd;
         $results = Ticket::getTickets(null, 'id DESC');
         $content = '';
         while($obTicket = $results->fetchObject(Ticket::class)){
@@ -16,7 +18,7 @@ class Tickets extends Page{
                 'id'        => $obTicket->id,
                 'veiculo'   => $obTicket->veiculo,
                 'dtHoraIni' => date('d/m/Y H:i:s', strtotime($obTicket->dtHoraIni)),
-                'dtHoraFim' => date('d/m/Y H:i:s', strtotime($obTicket->dtHoraFim))
+                'dtHoraFim' => '' // date('d/m/Y H:i:s', strtotime($obTicket->dtHoraFim))
             ]);
         }
 
