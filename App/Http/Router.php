@@ -2,9 +2,10 @@
 
 namespace App\Http;
 
-use Closure;
-use Exception;
-use ReflectionFunction;
+use \Closure;
+use \Exception;
+use \ReflectionFunction;
+use \App\Http\Middleware\Queue as MiddlewareQueue;
 
 class Router{
 
@@ -35,6 +36,8 @@ class Router{
             }
         }
 
+        $params['middlewares'] = $params['middlewares'] ?? [];
+
         $params['variables'] = [];
 
         $patternVariable = '/{(.*?)}/';
@@ -47,7 +50,6 @@ class Router{
         $patternRoute = '/^' . str_replace('/', '\/', $route) . '$/';
         
         $this->routes[$patternRoute][$method] = $params;
-
     }
 
     public function get($route,$params = []){
@@ -113,10 +115,16 @@ class Router{
                 $args[$name] = $route['variables'][$name] ?? '';
             }
 
-            return call_user_func_array($route['controller'], $args);
+            // retorna a execução de fila de middlewares
+            return (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->
+                next($this->request);
 
         } catch (Exception $e) {
             return new Response($e->getCode(), $e->getMessage());
         }
+    }
+
+    public function getCurrentUrl(){
+        return $this->url . $this->getUri();
     }
 }

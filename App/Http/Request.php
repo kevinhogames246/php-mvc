@@ -25,7 +25,7 @@ class Request{
         $this->uri = $_SERVER['REQUEST_URI'] ?? '';
 
         $xUri = explode('?', $this->uri);
-
+        
         $this->uri = $xUri[0];
         return null;
     }

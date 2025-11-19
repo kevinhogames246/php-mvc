@@ -8,17 +8,25 @@ use \App\Db\Pagination;
 
 class Tickets extends Page{
 
-    public static function TicketsDetails($request){
+    public static function TicketsDetails($request, &$obPagination){
         
         $quantidadeTotal = Ticket::getTickets(null, null, null, 'COUNT(*) as qtd')->fetchObject()->qtd;
-        $results = Ticket::getTickets(null, 'id DESC');
+        
+        $queryParams = $request->getQueryParams();
+
+        $paginaAtual = $queryParams['page'] ?? 1;
+
+        $obPagination = new Pagination($quantidadeTotal, $paginaAtual, 4);
+
+        $results = Ticket::getTickets(null, 'id DESC', $obPagination->getLimit());
         $content = '';
         while($obTicket = $results->fetchObject(Ticket::class)){
             $content .= View::render('pages/ticket/itens', [
                 'id'        => $obTicket->id,
                 'veiculo'   => $obTicket->veiculo,
                 'dtHoraIni' => date('d/m/Y H:i:s', strtotime($obTicket->dtHoraIni)),
-                'dtHoraFim' => '' // date('d/m/Y H:i:s', strtotime($obTicket->dtHoraFim))
+                'dtHoraFim' => '', // date('d/m/Y H:i:s', strtotime($obTicket->dtHoraFim))
+                // 'pageAtu'   => $paginaAtual
             ]);
         }
 
@@ -31,10 +39,10 @@ class Tickets extends Page{
         // ticketsDetails
 
         $content = View::render('pages/ticket/tickets', [
-            'ticketsDetails' => self::TicketsDetails($request)
+            'ticketsDetails' => self::TicketsDetails($request, $obPagination),
+            'pagination'     => parent::getPagination($request, $obPagination)
             ]
         );
-
 
         return parent::getPage($content);
     }

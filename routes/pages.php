@@ -9,6 +9,12 @@ $obRouter->get('/', [
     }
 ]);
 
+// $obRouter->get('/login', [
+//     function(){
+//         return new Response(202, Pages\Page::Login());
+//     }
+// ]);
+
 $obRouter->get('/tickets', [
     function($request){
         return new Response(202, Pages\Tickets::Tickets($request));
