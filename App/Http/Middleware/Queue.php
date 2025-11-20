@@ -61,10 +61,14 @@ class Queue{
      * @return Response
      */
     public function next($request){
-
+        
         if(empty($this->middlewares)) return call_user_func_array($this->controller, $this->controllerArgs);
         
         $middleware = array_shift($this->middlewares);
+        
+        // echo '<pre>';
+        // print_r($this->middlewares);
+        // echo '</pre>';exit;
         
         if(!isset(self::$map[$middleware])){
             throw new Exception("Problemas ao processar o middleware da requisição", 500);

@@ -127,4 +127,17 @@ class Router{
     public function getCurrentUrl(){
         return $this->url . $this->getUri();
     }
+
+    /**
+     * Metodo responsavel por redirencionar a URL
+     * @param string $route
+     */
+    public function redirect($route){
+        
+        $url = $this->url. $route;
+
+
+        header('location: '.$url);
+        exit;
+    }
 }
