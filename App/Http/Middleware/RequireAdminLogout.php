@@ -13,10 +13,11 @@ class RequireAdminLogout{
      * @return Response
      */
     public function handle($request, $next){
+
         if(SessionAdminLogin::isLogged()){
             $request->getRouter()->redirect('/admin');
         }
-        die("Esta logado");
+        // die("Esta logado");
 
         if (getenv('MAINTENANCE') == 'true') {
             throw new \Exception("Página em manutenção. Tente novamente mais tarde.", 200);

@@ -14,6 +14,7 @@ class User{
     public $email;
     public $senha;
     public $user;
+    public $role;
 
     public static function getUserByEmail($email){
         return (new Database('usuarios'))->select('email = "' . $email . '"')->fetchObject(self::class);

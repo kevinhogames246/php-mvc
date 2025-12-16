@@ -20,6 +20,7 @@ class Login extends Page
     public static function getLogin($request, $errorMenssage = null)
     {
 
+
         $status = !is_null($errorMenssage) ? View::render('admin/login/status', [
             'menssagem' => $errorMenssage
         ]) : '';
@@ -54,5 +55,18 @@ class Login extends Page
 
         $content = '';
         return parent::getPage('Login > balancAllesqwe', $content);
+    }
+
+    /**
+     * Metodo responsavel por deslogar o usuário
+     * @param Request $request
+     * @return void
+     */
+    public static function setLogout($request){
+
+        SessionAdminLogin::logout();
+
+        $request->getRouter()->redirect('/admin/login');
+
     }
 }

@@ -32,7 +32,7 @@ class Response{
             header($key.': '.$value);
         }
     }
-
+ 
     public function sendResponse(){
         $this->sendHeaders();
         
@@ -40,6 +40,8 @@ class Response{
             case 'text/html':
                 echo $this->content;
                 exit;
+            case 'application/json':
+                echo json_encode($this->content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         }
     }
 }

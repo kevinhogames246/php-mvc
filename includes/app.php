@@ -24,8 +24,9 @@ View::init([
 ]);
 
 MiddlewareQueue::setMap([
-    'maintenance' => \App\Http\Middleware\Maintenance::class,
-    'required-admin-logout' => \App\Http\Middleware\RequireAdminLogout::class
+    'maintenance'           => \App\Http\Middleware\Maintenance::class,
+    'required-admin-logout' => \App\Http\Middleware\RequireAdminLogout::class,
+    'permission-check'      => \App\Http\Middleware\PermissionCheck::class
 ]);
 MiddlewareQueue::setDefault([
     'maintenance'
