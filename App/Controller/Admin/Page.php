@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use \App\Utils\View;
+use \App\DotEnv\Environment;
 
 class Page{
 
@@ -17,6 +18,18 @@ class Page{
                 'title'          => $title,
                 'content'         => $content
             ]
+        );
+    }
+
+    public static function getError($code, $error, $message) {
+        return self::getPage(
+            'Erro - '.$error,
+             View::render('utils/error', [
+                'code'     => $code,
+                'error'    => $error,
+                'message'  => $message,
+                'url_home' => getenv('URL') // Ajuste conforme sua rota inicial
+            ])
         );
     }
 }

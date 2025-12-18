@@ -43,6 +43,8 @@ class Login extends Page
         $email = $postVars['email'] ?? '';
         $senha = $postVars['senha'] ?? '';
 
+        
+
         $obUser = User::getUserByEmail($email);
         
         if(!$obUser instanceof User or !password_verify($senha, $obUser->senha)){

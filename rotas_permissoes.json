@@ -1,4 +1,8 @@
 {
+  "/admin": {
+    "permissoes_necessarias": ["admin", "supervisor"],
+    "descricao": "Gerenciamento completo de usuários."
+  },
   "/admin/usuarios": {
     "permissoes_necessarias": ["admin", "supervisor"],
     "descricao": "Gerenciamento completo de usuários."

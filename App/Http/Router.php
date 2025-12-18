@@ -18,6 +18,7 @@ class Router{
         $this->request = new Request($this);
         $this->url = $url;
         $this->setPrefix();
+        
     }
 
     private function setPrefix(){
@@ -126,6 +127,10 @@ class Router{
 
     public function getCurrentUrl(){
         return $this->url . $this->getUri();
+    }
+    
+    public function getCurrentUri(){
+        return $this->getUri();
     }
 
     /**

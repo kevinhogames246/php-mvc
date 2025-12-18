@@ -4,6 +4,9 @@ namespace App\Http\Middleware;
 
 use \App\Session\Admin\Login as SessionAdminLogin;
 use \App\Http\Response;
+use \App\DotEnv\Environment;
+use \App\Utils\View;
+use \App\Controller\Admin\Page;
 
 class PermissionCheck {
 
@@ -29,16 +32,13 @@ class PermissionCheck {
      */
     private function checkAccess($route, $userRole, $permissionMap) {
         
-        // Remove a query string (ex: ?page=1) para casar com a rota estática
-        $cleanRoute = explode('?', $route)[0];
-        
         // Se a rota não estiver listada no JSON, assumimos que ela está livre,
         // mas APENAS se o require-admin-login já tiver garantido o login.
-        if (!isset($permissionMap[$cleanRoute])) {
+        if (!isset($permissionMap[$route])) {
             return true;
         }
 
-        $requiredRoles = $permissionMap[$cleanRoute]['permissoes_necessarias'] ?? [];
+        $requiredRoles = $permissionMap[$route]['permissoes_necessarias'] ?? [];
 
         // Verifica se a role do usuário está na lista de permissoes necessarias
         return in_array($userRole, $requiredRoles);
@@ -51,38 +51,49 @@ class PermissionCheck {
      * @return Response
      */
     public function handle($request, $next) {
-        
-        // 1. Obtém a função do usuário logado
         $userRole = SessionAdminLogin::getUserRole();
-        
-        // 2. Obtém a rota atual
-        $currentRoute = $request->getUri();
-        
-        // 3. Carrega o mapeamento de permissoes
+        $currentRoute = $request->getRouter()->getCurrentUri();
         $permissionMap = $this->getPermissionMap();
+        $isApi = str_contains($currentRoute, '/api');
 
-        echo '<pre>';
-        print_r($currentRoute);
-        echo '</pre>';exit;
-
-        if ($permissionMap === null) {
-            // Falha grave: arquivo de permissoes ausente.
-            return new Response(500, '{"error":"Configuration Error: Permission map not found."}', 'application/json');
+        // 1. Verificação de Login (401)
+        if ($userRole === null) {
+            return $this->getErrorResponse(401, "Não Autorizado", "Você precisa estar logado para acessar esta área.", $isApi);
         }
 
-        // 4. Verifica a permissão
+        // 2. Verificação de Arquivo de Configuração (500)
+        if ($permissionMap === null) {
+            return $this->getErrorResponse(500, "Erro Interno", "Configuração de permissões não encontrada.", $isApi);
+        }
+        
+        // 3. Verificação de Acesso (403)
         if ($this->checkAccess($currentRoute, $userRole, $permissionMap)) {
-            // Permissão OK, continua para o próximo Middleware/Controller
             return $next($request);
         }
 
-        // 5. Permissão Negada (A autorização falhou)
-        $requiredRoles = $permissionMap[$currentRoute]['permissoes_necessarias'] ?? [];
-        
-        // Você pode redirecionar para uma página de erro 403 ou retornar JSON
-        return new Response(403, 
-            '{"error":"Forbidden","message":"Permission Denied. Role: ' . $userRole . '. Required: ' . implode(', ', $requiredRoles) . '"}', 
-            'application/json'
-        );
+        return $this->getErrorResponse(403, "Acesso Proibido", "Sua função ($userRole) não tem permissão para acessar esta página.", $isApi);
+    }
+
+    /**
+     * Retorna erro em JSON para API ou HTML para Web
+     */
+    private function getErrorResponse($code, $error, $message, $isApi) {
+
+        SessionAdminLogin::logout();
+
+        if ($isApi) {
+            $body = json_encode([
+                'status'  => 'erro',
+                'code'    => $code,
+                'error'   => $error,
+                'message' => $message
+            ], JSON_UNESCAPED_UNICODE);
+            
+            return new Response($code, $body, 'application/json');
+        }
+
+        // Retorna a página completa usando o Controller Admin\Page para manter o layout (menu, css, etc)
+        // Se o seu Page::getPage exigir um Request, você pode passar ou simplificar
+        return new Response($code, Page::getError($code,$error,$message));
     }
 }
