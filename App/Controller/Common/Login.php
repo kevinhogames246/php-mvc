@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\Common;
 
 
 use \App\Utils\View;
 use \App\Http\Request;
 use \App\Model\Entity\User;
 
-use \App\Session\Admin\Login as SessionAdminLogin;
+use \App\Session\Common\Login as SessionLogin;
 
 class Login extends Page
 {
@@ -51,7 +51,7 @@ class Login extends Page
             return self::getLogin($request, 'E-mail ou senha invalidos');
         }
 
-        SessionAdminLogin::login($obUser);
+        SessionLogin::login($obUser);
         
         $request->getRouter()->redirect('/admin');
 
@@ -66,7 +66,7 @@ class Login extends Page
      */
     public static function setLogout($request){
 
-        SessionAdminLogin::logout();
+        SessionLogin::logout();
 
         $request->getRouter()->redirect('/admin/login');
 

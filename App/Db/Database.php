@@ -124,20 +124,21 @@ class Database{
 
   /**
    * Método responsável por executar uma consulta no banco
+   * @param  string $join
    * @param  string $where
    * @param  string $order
    * @param  string $limit
    * @param  string $fields
    * @return PDOStatement
    */
-  public function select($where = null, $order = null, $limit = null, $fields = '*'){
+  public function select($join = null, $where = null, $order = null, $limit = null, $fields = '*'){
     //DADOS DA QUERY
     $where = strlen($where) ? 'WHERE '.$where : '';
     $order = strlen($order) ? 'ORDER BY '.$order : '';
     $limit = strlen($limit) ? 'LIMIT '.$limit : '';
 
     //MONTA A QUERY
-    $query = 'SELECT '.$fields.' FROM '.$this->table.' '.$where.' '.$order.' '.$limit;
+    $query = 'SELECT '.$fields.' FROM '.$this->table.' '.$join.' '.$where.' '.$order.' '.$limit;
 
     //EXECUTA A QUERY
     return $this->execute($query);

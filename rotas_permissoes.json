@@ -2,21 +2,5 @@
   "/admin": {
     "permissoes_necessarias": ["admin", "supervisor"],
     "descricao": "Gerenciamento completo de usuários."
-  },
-  "/admin/usuarios": {
-    "permissoes_necessarias": ["admin", "supervisor"],
-    "descricao": "Gerenciamento completo de usuários."
-  },
-  "/admin/tickets/editar": {
-    "permissoes_necessarias": ["admin", "editor"],
-    "descricao": "Edição de tickets."
-  },
-  "/admin/tickets": {
-    "permissoes_necessarias": ["admin", "editor", "leitor"],
-    "descricao": "Visualização da lista de tickets."
-  },
-  "/atualizador/add": {
-    "permissoes_necessarias": ["admin", "editor"],
-    "descricao": "Adiciona proximo item a lista de atualizacao."
   }
 }

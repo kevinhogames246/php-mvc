@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Session\Admin;
+namespace App\Session\Common;
 
 class Login{
 
@@ -23,10 +23,10 @@ class Login{
         self::init();
 
         $_SESSION['admin']['usuario'] = [
-            'id' => $obUser->id,
-            'nome' => $obUser->nome,
+            'id'    => $obUser->id,
+            'nome'  => $obUser->nome,
             'email' => $obUser->email,
-            'role' => $obUser->role
+            'role'  => $obUser->getRoles()
         ];
         
         return true;
@@ -61,10 +61,10 @@ class Login{
      * Metodo responsavel por retornar a funcao (role) do usuario logado
      * @return string|null
      */
-    public static function getUserRole(){
+    public static function getUserRoles(){
         self::init();
 
         // Retorna a role ou null se não estiver definida ou logado
-        return $_SESSION['admin']['usuario']['role'] ?? null;
+        return $_SESSION['admin']['usuario']['roles'] ?? null;
     }
 }

@@ -2,47 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use \App\Session\Admin\Login as SessionAdminLogin;
+use \App\Session\Common\Login as SessionLogin;
 use \App\Http\Response;
-use \App\DotEnv\Environment;
 use \App\Utils\View;
-use \App\Controller\Admin\Page;
+use \App\Controller\Common\Page; // Mantenha ou ajuste para Common\Page conforme sua necessidade
 
 class PermissionCheck {
-
-    /**
-     * Metodo responsavel por carregar o arquivo de mapeamento de permissoes
-     * @return array
-     */
-    private function getPermissionMap() {
-        $path = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'rotas_permissoes.json';
-        if (!file_exists($path)) {
-            // Se o arquivo de permissões não existir, negamos o acesso por segurança.
-            return null;
-        }
-        return json_decode(file_get_contents($path), true);
-    }
-
-    /**
-     * Metodo responsavel por verificar se a funcao do usuario tem acesso a rota
-     * @param string $route Caminho da rota (Ex: /admin/usuarios)
-     * @param string $userRole Funcao do usuario logado (Ex: admin)
-     * @param array $permissionMap Mapeamento de rotas e permissoes
-     * @return bool
-     */
-    private function checkAccess($route, $userRole, $permissionMap) {
-        
-        // Se a rota não estiver listada no JSON, assumimos que ela está livre,
-        // mas APENAS se o require-admin-login já tiver garantido o login.
-        if (!isset($permissionMap[$route])) {
-            return true;
-        }
-
-        $requiredRoles = $permissionMap[$route]['permissoes_necessarias'] ?? [];
-
-        // Verifica se a role do usuário está na lista de permissoes necessarias
-        return in_array($userRole, $requiredRoles);
-    }
 
     /**
      * Metodo responsavel por executar o middleware
@@ -51,35 +16,53 @@ class PermissionCheck {
      * @return Response
      */
     public function handle($request, $next) {
-        $userRole = SessionAdminLogin::getUserRole();
-        $currentRoute = $request->getRouter()->getCurrentUri();
-        $permissionMap = $this->getPermissionMap();
-        $isApi = str_contains($currentRoute, '/api');
-
-        // 1. Verificação de Login (401)
-        if ($userRole === null) {
-            return $this->getErrorResponse(401, "Não Autorizado", "Você precisa estar logado para acessar esta área.", $isApi);
-        }
-
-        // 2. Verificação de Arquivo de Configuração (500)
-        if ($permissionMap === null) {
-            return $this->getErrorResponse(500, "Erro Interno", "Configuração de permissões não encontrada.", $isApi);
-        }
+        // 1. Obtém a role do usuário logado na sessão (Common)
+        $userRoles = SessionLogin::getUserRoles();
         
-        // 3. Verificação de Acesso (403)
-        if ($this->checkAccess($currentRoute, $userRole, $permissionMap)) {
+        // 2. Obtém os dados da rota atual diretamente do Router
+        // O Router deve ter o método getCurrentRoute() que retorna o array $params
+        $route = $request->getRouter()->getCurrentRoute();
+        
+        // 3. Verifica se a rota possui restrição de 'role' definida
+        $allowedRoles = $route['role'] ?? [];
+
+
+        // 4. Identifica se é uma requisição de API pelo prefixo da URI
+        $currentUri = $request->getRouter()->getCurrentUri();
+        $isApi = str_contains($currentUri, '/api');
+
+        // VALIDAÇÃO A: Rota pública (se não houver 'role' definida na rota, permite acesso)
+        if (empty($allowedRoles)) {
             return $next($request);
         }
 
-        return $this->getErrorResponse(403, "Acesso Proibido", "Sua função ($userRole) não tem permissão para acessar esta página.", $isApi);
+        // VALIDAÇÃO B: Verificação de Login (401)
+        if ($userRoles === null) {
+            return $this->getErrorResponse(401, "Não Autorizado", "Você precisa estar logado para acessar esta área.", $isApi);
+        }
+
+        // Verifica se PELO MENOS UMA das roles do usuário está no array da rota
+        // array_intersect retorna os valores comuns entre os dois arrays
+        if (!empty(array_intersect($userRoles, $allowedRoles))) {
+            return $next($request);
+        }
+
+        // Se chegou aqui, o usuário está logado mas não tem a role necessária
+        return $this->getErrorResponse(403, "Acesso Proibido", "Suaa funções não tem permissão para acessar este módulo.", $isApi);
     }
 
     /**
-     * Retorna erro em JSON para API ou HTML para Web
+     * Metodo responsavel por retornar o erro formatado (JSON ou HTML)
+     * @param int $code
+     * @param string $error
+     * @param string $message
+     * @param bool $isApi
+     * @return Response
      */
     private function getErrorResponse($code, $error, $message, $isApi) {
-
-        SessionAdminLogin::logout();
+        
+        // Em caso de erro de permissão ou não autorizado, opcionalmente desloga
+        // SessionLogin::logout(); 
 
         if ($isApi) {
             $body = json_encode([
@@ -87,13 +70,13 @@ class PermissionCheck {
                 'code'    => $code,
                 'error'   => $error,
                 'message' => $message
-            ], JSON_UNESCAPED_UNICODE);
+            ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             
             return new Response($code, $body, 'application/json');
         }
 
-        // Retorna a página completa usando o Controller Admin\Page para manter o layout (menu, css, etc)
-        // Se o seu Page::getPage exigir um Request, você pode passar ou simplificar
-        return new Response($code, Page::getError($code,$error,$message));
+        // Retorna a página de erro usando o Controller de Page padrão
+        // Ajuste o nome da classe Page se você mudou de Admin para Common
+        return new Response($code, Page::getError($code, $error, $message));
     }
 }

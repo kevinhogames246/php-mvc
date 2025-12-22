@@ -33,4 +33,19 @@ class View{
 
         return str_replace($keys,array_values($vars), $contentView);
     }
+
+    public static function renderMenu($contexto) {
+        $menus = json_decode(file_get_contents('menus.json'), true);
+        $itens = $menus[$contexto] ?? [];
+        
+        $html = '';
+        foreach ($itens as $item) {
+            $html .= View::render('layout/menu_item', [
+                'link'  => $item['link'],
+                'label' => $item['label'],
+                'icon'  => $item['icon']
+            ]);
+        }
+    return $html;
+}
 }

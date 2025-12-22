@@ -99,6 +99,11 @@ class Router{
         // return null;
     }
 
+    /**
+     * Metodo responsavel por identificar a rota e coletar a Response
+     * @throws Exception
+     * @return Response
+     */
     public function run(){
         try {
             $route = $this->getRoute();
@@ -115,7 +120,7 @@ class Router{
                 $name = $parameter->getName();
                 $args[$name] = $route['variables'][$name] ?? '';
             }
-
+            
             // retorna a execução de fila de middlewares
             return (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->
                 next($this->request);
@@ -123,6 +128,14 @@ class Router{
         } catch (Exception $e) {
             return new Response($e->getCode(), $e->getMessage());
         }
+    }
+
+    /**
+     * Metodo responsavel por retornar os dados da rota atual encontrada
+     * @return array
+     */
+    public function getCurrentRoute() {
+        return $this->getRoute();
     }
 
     public function getCurrentUrl(){

@@ -29,5 +29,6 @@ MiddlewareQueue::setMap([
     'permission-check'      => \App\Http\Middleware\PermissionCheck::class
 ]);
 MiddlewareQueue::setDefault([
-    'maintenance'
+    'maintenance',
+    'permission-check'
 ]);

@@ -19,7 +19,8 @@ class Queue{
      * Mapeamento de middlewares padrao para todas as rotas
      * @var array
      */
-    private static $default = [];
+    private static $default = [
+    ];
 
     private $middlewares = [];
 
@@ -65,10 +66,6 @@ class Queue{
         if(empty($this->middlewares)) return call_user_func_array($this->controller, $this->controllerArgs);
         
         $middleware = array_shift($this->middlewares);
-        
-        // echo '<pre>';
-        // print_r($this->middlewares);
-        // echo '</pre>';exit;
         
         if(!isset(self::$map[$middleware])){
             throw new Exception("Problemas ao processar o middleware da requisição", 500);
