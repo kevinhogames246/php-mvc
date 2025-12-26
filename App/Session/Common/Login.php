@@ -22,11 +22,11 @@ class Login{
 
         self::init();
 
-        $_SESSION['admin']['usuario'] = [
+        $_SESSION['common']['usuario'] = [
             'id'    => $obUser->id,
             'nome'  => $obUser->nome,
             'email' => $obUser->email,
-            'role'  => $obUser->getRoles()
+            'roles'  => $obUser->getRoles()
         ];
         
         return true;
@@ -40,7 +40,7 @@ class Login{
         
         self::init();
 
-        return isset($_SESSION['admin']['usuario']['id']);
+        return isset($_SESSION['common']['usuario']['id']);
     }
 
     /**
@@ -52,7 +52,7 @@ class Login{
         // inicia a sessao
         self::init();
 
-        unset($_SESSION['admin']['usuario']);
+        unset($_SESSION['common']['usuario']);
 
         return true;
     }
@@ -65,6 +65,6 @@ class Login{
         self::init();
 
         // Retorna a role ou null se não estiver definida ou logado
-        return $_SESSION['admin']['usuario']['roles'] ?? null;
+        return $_SESSION['common']['usuario']['roles'] ?? null;
     }
 }
