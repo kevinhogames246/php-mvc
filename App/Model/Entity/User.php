@@ -15,8 +15,8 @@ class User{
     public $senha;
     public $user;
 
-    public static function getUserByEmail($email){
-        return (new Database('usuarios'))->select('email = "' . $email . '"')->fetchObject(self::class);
+    public static function getUserByEmail($email){      
+        return (new Database('usuarios'))->select(null,'email = "' . $email . '"')->fetchObject(self::class);
     }
 
     /**
@@ -34,11 +34,12 @@ class User{
             null,
             'roles.nome'
         );
-
+        
+        
         while($role = $results->fetchObject()){
             $roles[] = $role->nome;
         }
-
+    
         return $roles; // Retorna ex: ['admin', 'atualizador']
     }
 }

@@ -1,44 +1,15 @@
-
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="{{URL}}/public/css/style.css">
-    <link rel="stylesheet" href="{{URL}}/public/css/inputBusca.css">
-    <link rel="stylesheet" href="{{URL}}/public/css/pageInput.css">
-
-    <link rel="stylesheet" href="{{URL}}/public/css/estilo.css">
-
-    <link rel="stylesheet" href="../css/estilo-login.css">
-    
-    <link rel="shortcut icon" href="../img/estoque.ico" type="image/x-icon">
-    <title>BalancAlles</title>
-    <!-- <script src="../js/javascript.js"></script> -->
-</head>
-
-<body>
-    <section class="container container_login">
-
-        <form class="forms" method="POST" action="../controllers/OffController.php">
-            <div class="titulo_forms login">
-                <span>EstocALLES</span>
-            </div>
-            <div class="campos_forms login">
-                <div class="label-float">
-                    <input type="text" name="user" id="E-mail" placeholder=" " value="" required>
-                    <label for="email">Usuario:</label>
-                </div>
-                <div class="label-float">
-                    <input type="password" name="senha" id="Senha" placeholder=" " value="" required>
-                    <label for="senha">Senha:</label>
-                </div>
-            </div>
-            <div class="case-button">
-                <button class="red-2" type="submit" value="login" name="action" class="entrar">Login</button>
-            </div>
-        </form>
-    </section>
-</body>
-</html>
+<div class="login-container">
+    <form method="post" action="login">
+        <h1>Acesso ao Sistema</h1>
+        {{status}}
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" name="email" class="form-control" required autofocus>
+        </div>
+        <div class="form-group">
+            <label>Senha</label>
+            <input type="password" name="senha" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+</div>

@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use \App\Session\Admin\Login as SessionAdminLogin;
+use \App\Session\Common\Login as SessionCommonLogin;
 
-class RequireAdminLogout{
+class RequireCommonLogout{
 
     /**
      * Metodo responsavel por executar o middleware
@@ -14,7 +14,7 @@ class RequireAdminLogout{
      */
     public function handle($request, $next){
 
-        if(SessionAdminLogin::isLogged()){
+        if(SessionCommonLogin::isLogged()){
             $request->getRouter()->redirect('/admin');
         }
         // die("Esta logado");

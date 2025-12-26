@@ -5,6 +5,7 @@ namespace App\Controller\Common;
 
 use \App\Utils\View;
 use \App\Http\Request;
+use \App\Http\Response;
 use \App\Model\Entity\User;
 
 use \App\Session\Common\Login as SessionLogin;
@@ -21,11 +22,11 @@ class Login extends Page
     {
 
 
-        $status = !is_null($errorMenssage) ? View::render('admin/login/status', [
+        $status = !is_null($errorMenssage) ? View::render('pages/status', [
             'menssagem' => $errorMenssage
         ]) : '';
 
-        $content = View::render('admin/login', [
+        $content = View::render('pages/login', [
             'status' => $status
         ]);
 
@@ -41,11 +42,10 @@ class Login extends Page
     {
         $postVars = $request->getPostVars();
         $email = $postVars['email'] ?? '';
-        $senha = $postVars['senha'] ?? '';
-
-        
+        $senha = $postVars['senha'] ?? '';        
 
         $obUser = User::getUserByEmail($email);
+
         
         if(!$obUser instanceof User or !password_verify($senha, $obUser->senha)){
             return self::getLogin($request, 'E-mail ou senha invalidos');
@@ -53,10 +53,14 @@ class Login extends Page
 
         SessionLogin::login($obUser);
         
-        $request->getRouter()->redirect('/admin');
+        $roles = $obUser->getRoles();
 
-        $content = '';
-        return parent::getPage('Login > balancAllesqwe', $content);
+        if(count($roles) === 1 and !in_array("admin", $roles)){
+            $contexto = $roles[0];
+            return $request->getRouter()->redirect('/' . $contexto);
+        }
+                
+        return $request->getRouter()->redirect('/contexto');
     }
 
     /**

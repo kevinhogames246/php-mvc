@@ -38,6 +38,7 @@ class PermissionCheck {
 
         // VALIDAÇÃO B: Verificação de Login (401)
         if ($userRoles === null) {
+            $request->getRouter()->redirect('/');
             return $this->getErrorResponse(401, "Não Autorizado", "Você precisa estar logado para acessar esta área.", $isApi);
         }
 

@@ -20,16 +20,12 @@ class View{
         
         $contentView = self::getContentView($view);
 
-        
         $vars = array_merge(self::$vars, $vars);
 
         $keys = array_keys($vars);
         $keys = array_map(function($item){
             return '{{' . $item . '}}';
         }, $keys);
-
-
-        // var_dump($keys);exit;
 
         return str_replace($keys,array_values($vars), $contentView);
     }

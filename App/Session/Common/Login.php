@@ -20,8 +20,9 @@ class Login{
      */
     public static function login($obUser){
 
+        
         self::init();
-
+        
         $_SESSION['common']['usuario'] = [
             'id'    => $obUser->id,
             'nome'  => $obUser->nome,
