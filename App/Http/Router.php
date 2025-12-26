@@ -121,9 +121,17 @@ class Router{
                 $args[$name] = $route['variables'][$name] ?? '';
             }
             
-            // retorna a execução de fila de middlewares
-            return (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->
-                next($this->request);
+            // Executa o controlador (ou fila de middlewares)
+            $result = (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->next($this->request);
+                    
+            // SE O RESULTADO FOR UMA STRING, CONVERTE PARA OBJETO RESPONSE
+            if (is_string($result)) {
+                return new Response(200, $result);
+            }
+            
+            // SE JÁ FOR UM OBJETO (como o retornado pelo redirect), APENAS RETORNA
+            return $result;
+            
 
         } catch (Exception $e) {
             return new Response($e->getCode(), $e->getMessage());

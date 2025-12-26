@@ -33,35 +33,35 @@ class Login extends Page
         return parent::getPage('Login > balancAlles', $content);
     }
 
-    /**
-     * Metodo responsavel por definir o login do usuário
-     * @param Request $request
-     * @return string
-     */
-    public static function setLogin($request)
-    {
-        $postVars = $request->getPostVars();
-        $email = $postVars['email'] ?? '';
-        $senha = $postVars['senha'] ?? '';        
+        /**
+         * Metodo responsavel por definir o login do usuário
+         * @param Request $request
+         * @return string
+         */
+        public static function setLogin($request)
+        {
+            $postVars = $request->getPostVars();
+            $email = $postVars['email'] ?? '';
+            $senha = $postVars['senha'] ?? '';        
 
-        $obUser = User::getUserByEmail($email);
+            $obUser = User::getUserByEmail($email);
 
-        
-        if(!$obUser instanceof User or !password_verify($senha, $obUser->senha)){
-            return self::getLogin($request, 'E-mail ou senha invalidos');
+            
+            if(!$obUser instanceof User or !password_verify($senha, $obUser->senha)){
+                return self::getLogin($request, 'E-mail ou senha invalidos');
+            }
+
+            SessionLogin::login($obUser);
+            
+            $roles = $obUser->getRoles();
+
+            if(count($roles) === 1 and !in_array("admin", $roles)){
+                $contexto = $roles[0];
+                return $request->getRouter()->redirect('/' . $contexto);
+            }
+                    
+            return $request->getRouter()->redirect('/contexto');
         }
-
-        SessionLogin::login($obUser);
-        
-        $roles = $obUser->getRoles();
-
-        if(count($roles) === 1 and !in_array("admin", $roles)){
-            $contexto = $roles[0];
-            return $request->getRouter()->redirect('/' . $contexto);
-        }
-                
-        return $request->getRouter()->redirect('/contexto');
-    }
 
     /**
      * Metodo responsavel por deslogar o usuário
