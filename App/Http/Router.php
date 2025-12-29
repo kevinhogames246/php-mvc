@@ -160,7 +160,7 @@ class Router{
      */
     public function redirect($route){
         
-        $url = $this->url. $route;
+        $url = $this->url . $route;
 
 
         header('location: '.$url);
