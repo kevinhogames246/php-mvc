@@ -14,15 +14,10 @@ class RequireCommonLogout{
      */
     public function handle($request, $next){
 
-        if(SessionCommonLogin::isLogged()){
-            $request->getRouter()->redirect('/admin');
+        if(! SessionCommonLogin::isLogged()){
+            $request->getRouter()->redirect('/');
         }
-        // die("Esta logado");
 
-        if (getenv('MAINTENANCE') == 'true') {
-            throw new \Exception("Página em manutenção. Tente novamente mais tarde.", 200);
-            
-        }
         return $next($request);
     }
 }

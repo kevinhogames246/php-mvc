@@ -17,10 +17,9 @@ class Contexto extends Page
      * @return void
      */
     public static function getContexto($request){
-        Environment::load(__DIR__ . '/../');
         $url = getenv('URL'); // $request->getRouter()->getCurrentRoute();
 
-        $roles = SessionLogin::getUserRoles() ?? '';
+        $roles = SessionLogin::getUserRoles() ?? [];
         $itens = '';
         
         // echo '<pre>';
@@ -33,9 +32,7 @@ class Contexto extends Page
                 'modulo'      => $role,
                 'nome_modulo' => ucfirst($role),
                 'url'         => $url
-                ]);
-
-            
+                ]);   
         }
 
         // Renderiza o conteúdo final

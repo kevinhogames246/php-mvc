@@ -55,7 +55,7 @@ class Login extends Page
             
             $roles = $obUser->getRoles();
 
-            if(count($roles) === 1 and !in_array("admin", $roles)){
+            if(count($roles) === 1){
                 $contexto = $roles[0];
                 return $request->getRouter()->redirect('/' . $contexto);
             }
@@ -72,7 +72,7 @@ class Login extends Page
 
         SessionLogin::logout();
 
-        $request->getRouter()->redirect('/admin/login');
+        $request->getRouter()->redirect('/login');
 
     }
 }
